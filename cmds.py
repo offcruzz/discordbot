@@ -8,11 +8,13 @@ import json
 from datetime import date
 from discord.ext import tasks
 from itertools import cycle
+from discord_components import *
 
 with open('config.json', 'r') as f:
     config = json.loads(f.read())
     token = config['token']
     prefix = config['prefix']
+    connecturl = config['connecturl']
 client = commands.Bot(command_prefix = prefix)
 
 status = cycle(['discord.gg/race', 'Developed by cruzz#5071'])
@@ -23,6 +25,7 @@ async def on_ready():
     print('Bot by cruzz#5071 \n')
     print('Bot online!\n') 
     print(f'Nome: {client.user}\n') 
+    DiscordComponents(client)
 
 @tasks.loop(seconds=40)
 async def change_status():
@@ -180,7 +183,24 @@ async def erroid(ctx, membro : discord.Member):
     
     await asyncio.sleep(10)
         
-    await resp.delete()    
+    await resp.delete()   
+    
+COR =10181046
+@client.command()
+async def connectmsg(ctx):
+    if ctx.author.guild_permissions.kick_members:
+        embed1 =discord.Embed(
+            title="Conecte-se no Race Ultimate automaticamente!",
+            color=COR,
+            description="-Quer se conectar no servidor de forma mais rápida?\n"
+            "-Para conectar é bem simples! \n"
+            "-Clique no botão abaixo e pronto!",)
+        await ctx.send(
+            embed=embed1,
+            components = [
+                Button(style=ButtonStyle.URL, label = 'Conectar no servidor', url=connecturl)
+            ]
+        )
 
 @client.command()
 async def start(ctx, membro : discord.Member, mes=None, *,day=None):
